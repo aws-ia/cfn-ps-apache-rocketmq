@@ -1,5 +1,5 @@
 project:
-  name: quickstart-apache-rocketmq
+  name: cfn-ps-apache-rocketmq
   owner: quickstart-eng@amazon.com
   package_lambda: false
   parameters:
