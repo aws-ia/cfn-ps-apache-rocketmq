@@ -3,9 +3,13 @@ Description: (SO8006) - Deploy Apache RocketMQ Cluster on a existing VPC in AWS.
 Metadata:
   QuickStartDocumentation:
     EntrypointName: Launch into an existing VPC
-    Order: "5"
+    Order: '5'
   QSLint:
-    Exclusions: [ W9002, W9003, W9004, W9006 ]
+    Exclusions:
+      - W9002
+      - W9003
+      - W9004
+      - W9006
   cfn-lint:
     config:
       ignore_checks:
@@ -107,40 +111,32 @@ Parameters:
   PublicSubnet1ID:
     Type: String
     Description: ID of the public subnet in Availability Zone 1 of your existing VPC (e.g., subnet-a0246dcd).
-    Default: ""
+    Default: ''
   PublicSubnet2ID:
     Type: String
     Description: ID of the public subnet in Availability Zone 2 of your existing VPC (e.g., subnet-b1236eea).
-    Default: ""
+    Default: ''
   PublicSubnet3ID:
     Type: String
     Description: ID of the public subnet in Availability Zone 3 of your existing VPC (e.g., subnet-c3456aba).
-    Default: ""
+    Default: ''
   PrivateSubnet1ID:
-    Type: "AWS::EC2::Subnet::Id"
+    Type: AWS::EC2::Subnet::Id
     Description: ID of the private subnet in Availability Zone 1 of your existing VPC (e.g., subnet-fe9a8b32).
   PrivateSubnet2ID:
     Type: String
     Description: ID of the private subnet in Availability Zone 2 of your existing VPC (e.g., subnet-be8b01ea).
-    Default: ""
+    Default: ''
   PrivateSubnet3ID:
     Type: String
     Description: ID of the private subnet in Availability Zone 3 of your existing VPC (e.g., subnet-abd39039).
-    Default: ""
+    Default: ''
   QSS3BucketName:
-    AllowedPattern: '^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$'
-    ConstraintDescription:
-      The Quick Start bucket name can include numbers, lowercase
-      letters, uppercase letters, and hyphens (-). It cannot start or end with a 
-      hyphen (-).
+    AllowedPattern: ^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$
+    ConstraintDescription: The Quick Start bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-).
     Default: aws-ia-us-east-1
-    Description:
-      Name of the S3 bucket for your copy of the Quick Start assets. 
-      Keep the default name unless you are customizing the template. 
-      Changing the name updates code references to point to a new Quick 
-      Start location. This name can include numbers, lowercase letters, 
-      uppercase letters, and hyphens, but do not start or end with a hyphen (-). 
-      See https://aws-quickstart.github.io/option1.html.
+    Description: Name of the S3 bucket for your copy of the Quick Start assets. Keep the default name unless you are customizing the template. Changing the name updates code references to point to a new
+      Quick Start location. This name can include numbers, lowercase letters, uppercase letters, and hyphens, but do not start or end with a hyphen (-). See https://aws-quickstart.github.io/option1.html.
     Type: String
   KeyPairName:
     Type: AWS::EC2::KeyPair::KeyName
@@ -183,31 +179,20 @@ Parameters:
     Description: Enter the number of bastion hosts to create.
     Type: String
   VPCID:
-    Type: "AWS::EC2::VPC::Id"
+    Type: AWS::EC2::VPC::Id
     Description: ID of your existing VPC (e.g., vpc-0343606e).
   QSS3KeyPrefix:
-    AllowedPattern: '^[0-9a-zA-Z-/]*$'
+    AllowedPattern: ^[0-9a-zA-Z-/]*$
     Type: String
-    ConstraintDescription:
-      The Quick Start S3 key prefix can include numbers, lowercase letters,
-      uppercase letters, hyphens (-), and forward slashes (/). The prefix should
-      end with a forward slash (/).
+    ConstraintDescription: The Quick Start S3 key prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slashes (/). The prefix should end with a forward slash (/).
     Default: cfn-ps-apache-rocketmq/
-    Description:
-      S3 key prefix that is used to simulate a directory for your copy of the 
-      Quick Start assets. Keep the default prefix unless you are customizing 
-      the template. Changing this prefix updates code references to point to 
-      a new Quick Start location. This prefix can include numbers, lowercase 
-      letters, uppercase letters, hyphens (-), and forward slashes (/). End with 
-      a forward slash. See https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingMetadata.html 
+    Description: S3 key prefix that is used to simulate a directory for your copy of the Quick Start assets. Keep the default prefix unless you are customizing the template. Changing this prefix updates
+      code references to point to a new Quick Start location. This prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slashes (/). End with a forward slash. See https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingMetadata.html
       and https://aws-quickstart.github.io/option1.html.
   QSS3BucketRegion:
-    Default: 'us-east-1'
-    Description: 'AWS Region where the Quick Start S3 bucket (QSS3BucketName) is 
-      hosted. Keep the default Region unless you are customizing the template. 
-      Changing this Region updates code references to point to a new Quick Start location. 
-      When using your own bucket, specify the Region. 
-      See https://aws-quickstart.github.io/option1.html.'
+    Default: us-east-1
+    Description: AWS Region where the Quick Start S3 bucket (QSS3BucketName) is hosted. Keep the default Region unless you are customizing the template. Changing this Region updates code references to point
+      to a new Quick Start location. When using your own bucket, specify the Region. See https://aws-quickstart.github.io/option1.html.
     Type: String
   NumberOfAZs:
     AllowedValues:
@@ -346,73 +331,143 @@ Parameters:
     Type: String
     Description: IOPS of io1 EBS volume. Not applicable for EBS volume types gp2 and gp3.
 Conditions:
-  CreateThreeReplicaSet: !Equals [!Ref 'BrokerClusterCount', '3']
-  RepeatSubnet: !Equals [!Ref 'NumberOfAZs', '2']
-  UsingDefaultBucket: !Equals [!Ref QSS3BucketName, 'aws-ia-us-east-1']
+  CreateThreeReplicaSet:
+    Fn::Equals:
+      - Ref: BrokerClusterCount
+      - '3'
+  RepeatSubnet:
+    Fn::Equals:
+      - Ref: NumberOfAZs
+      - '2'
+  UsingDefaultBucket:
+    Fn::Equals:
+      - Ref: QSS3BucketName
+      - aws-ia-us-east-1
 Resources:
   BastionStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Sub
-        - 'https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/cfn-ps-linux-bastion/templates/linux-bastion-entrypoint-existing-vpc.template.yaml'
-        - S3Region: !If [ UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion ]
-          S3Bucket: !If [ UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName ]
+      TemplateURL:
+        Fn::Sub:
+          - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/cfn-ps-linux-bastion/templates/linux-bastion-entrypoint-existing-vpc.template.yaml
+          - S3Region:
+              Fn::If:
+                - UsingDefaultBucket
+                - Ref: AWS::Region
+                - Ref: QSS3BucketRegion
+            S3Bucket:
+              Fn::If:
+                - UsingDefaultBucket
+                - Fn::Sub: ${QSS3BucketName}-${AWS::Region}
+                - Ref: QSS3BucketName
       Parameters:
-        BastionInstanceType: !Ref 'BastionInstanceType'
-        NumBastionHosts: !Ref 'NumBastionHosts'
-        BastionAMIOS: !Ref 'BastionAMIOS'
+        BastionInstanceType:
+          Ref: BastionInstanceType
+        NumBastionHosts:
+          Ref: NumBastionHosts
+        BastionAMIOS:
+          Ref: BastionAMIOS
         EnableTCPForwarding: 'true'
-        KeyPairName: !Ref 'KeyPairName'
-        PublicSubnet1ID: !Ref PublicSubnet1ID
-        PublicSubnet2ID: !Ref PublicSubnet2ID
-        QSS3BucketName: !Ref 'QSS3BucketName'
-        QSS3KeyPrefix: !Sub '${QSS3KeyPrefix}submodules/cfn-ps-linux-bastion/'
-        QSS3BucketRegion: !Ref 'QSS3BucketRegion'
-        RemoteAccessCIDR: !Ref 'RemoteAccessCIDR'
-        VPCID: !Ref VPCID
+        KeyPairName:
+          Ref: KeyPairName
+        PublicSubnet1ID:
+          Ref: PublicSubnet1ID
+        PublicSubnet2ID:
+          Ref: PublicSubnet2ID
+        QSS3BucketName:
+          Ref: QSS3BucketName
+        QSS3KeyPrefix:
+          Fn::Sub: ${QSS3KeyPrefix}submodules/cfn-ps-linux-bastion/
+        QSS3BucketRegion:
+          Ref: QSS3BucketRegion
+        RemoteAccessCIDR:
+          Ref: RemoteAccessCIDR
+        VPCID:
+          Ref: VPCID
   RocketMQStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Sub
-        - 'https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}templates/rocketmq.template.yaml'
-        - S3Region: !If [ UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion ]
-          S3Bucket: !If [ UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName ]
+      TemplateURL:
+        Fn::Sub:
+          - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}templates/rocketmq.template.yaml
+          - S3Region:
+              Fn::If:
+                - UsingDefaultBucket
+                - Ref: AWS::Region
+                - Ref: QSS3BucketRegion
+            S3Bucket:
+              Fn::If:
+                - UsingDefaultBucket
+                - Fn::Sub: ${QSS3BucketName}-${AWS::Region}
+                - Ref: QSS3BucketName
       Parameters:
-        QSS3BucketName: !Ref 'QSS3BucketName'
-        QSS3KeyPrefix: !Ref 'QSS3KeyPrefix'
-        QSS3BucketRegion: !Ref 'QSS3BucketRegion'
-        BastionSecurityGroupID: !GetAtt 'BastionStack.Outputs.BastionSecurityGroupID'
-        NameServerClusterCount: !Ref 'NameServerClusterCount'
-        BrokerClusterCount: !Ref 'BrokerClusterCount'
-        FlushDiskType: !Ref 'FlushDiskType'
-        Iops: !Ref 'Iops'
-        KeyPairName: !Ref 'KeyPairName'
-        NameServerInstanceType: !Ref 'NameServerInstanceType'
-        RocketMQVersion: !Ref 'RocketMQVersion'
-        BrokerNodeInstanceType: !Ref 'BrokerNodeInstanceType'
-        PrimaryNodeSubnet: !Ref PrivateSubnet1ID
-        Secondary0NodeSubnet: !Ref PrivateSubnet2ID
-        Secondary1NodeSubnet: !If
-          - RepeatSubnet
-          - !Ref PrivateSubnet2ID
-          - !Ref PrivateSubnet3ID
-        VPC: !Ref VPCID
-        VolumeSize: !Ref 'VolumeSize'
-        VolumeType: !Ref 'VolumeType'
+        QSS3BucketName:
+          Ref: QSS3BucketName
+        QSS3KeyPrefix:
+          Ref: QSS3KeyPrefix
+        QSS3BucketRegion:
+          Ref: QSS3BucketRegion
+        BastionSecurityGroupID:
+          Fn::GetAtt:
+            - BastionStack
+            - Outputs.BastionSecurityGroupID
+        NameServerClusterCount:
+          Ref: NameServerClusterCount
+        BrokerClusterCount:
+          Ref: BrokerClusterCount
+        FlushDiskType:
+          Ref: FlushDiskType
+        Iops:
+          Ref: Iops
+        KeyPairName:
+          Ref: KeyPairName
+        NameServerInstanceType:
+          Ref: NameServerInstanceType
+        RocketMQVersion:
+          Ref: RocketMQVersion
+        BrokerNodeInstanceType:
+          Ref: BrokerNodeInstanceType
+        PrimaryNodeSubnet:
+          Ref: PrivateSubnet1ID
+        Secondary0NodeSubnet:
+          Ref: PrivateSubnet2ID
+        Secondary1NodeSubnet:
+          Fn::If:
+            - RepeatSubnet
+            - Ref: PrivateSubnet2ID
+            - Ref: PrivateSubnet3ID
+        VPC:
+          Ref: VPCID
+        VolumeSize:
+          Ref: VolumeSize
+        VolumeType:
+          Ref: VolumeType
 Outputs:
   PrimaryReplicaNodeIp:
-    Value: !GetAtt 'RocketMQStack.Outputs.PrimaryReplicaNodeIp'
+    Value:
+      Fn::GetAtt:
+        - RocketMQStack
+        - Outputs.PrimaryReplicaNodeIp
     Description: Private IP address of primary replica node
   SecondaryRocketMQBrokerNode0Ip:
-    Value: !GetAtt 'RocketMQStack.Outputs.SecondaryRocketMQBrokerNode0Ip'
+    Value:
+      Fn::GetAtt:
+        - RocketMQStack
+        - Outputs.SecondaryRocketMQBrokerNode0Ip
     Description: Private IP address of secondary replica node 0
     Condition: CreateThreeReplicaSet
   SecondaryRocketMQBrokerNode1Ip:
-    Value: !GetAtt 'RocketMQStack.Outputs.SecondaryRocketMQBrokerNode1Ip'
+    Value:
+      Fn::GetAtt:
+        - RocketMQStack
+        - Outputs.SecondaryRocketMQBrokerNode1Ip
     Description: Private IP address of secondary replica node 1.
     Condition: CreateThreeReplicaSet
   RocketMQServerAccessSecurityGroup:
-    Value: !GetAtt 'RocketMQStack.Outputs.RocketMQServerAccessSecurityGroup'
+    Value:
+      Fn::GetAtt:
+        - RocketMQStack
+        - Outputs.RocketMQServerAccessSecurityGroup
     Description: Apache RocketMQ access security group
   Postdeployment:
     Description: See the deployment guide for post-deployment steps.
