@@ -358,3 +358,9 @@ Outputs:
     Description: Node Name Tag
     Value:
       Ref: ReplicaNodeNameTag
+  BrokerClusterCount:
+    Value:
+      Ref: BrokerClusterCount
+  QSS3BucketRegion:
+    Value:
+      Ref: QSS3BucketRegion

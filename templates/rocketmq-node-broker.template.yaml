@@ -360,3 +360,6 @@ Outputs:
     Description: Node Name Tag
     Value:
       Ref: ReplicaNodeNameTag
+  QSS3BucketRegion:
+    Value:
+      Ref: QSS3BucketRegion
