@@ -659,8 +659,12 @@ Resources:
     Type: AWS::CloudFormation::WaitConditionHandle
     Properties: {}
   PrimaryRocketMQBrokerNode0:
+    Metadata:
+      PseudoDependsOn: !If
+        - Launch1NameServer
+        - - !Ref RocketMQNameServerNode0
+        - ''
     Type: AWS::CloudFormation::Stack
-    DependsOn: RocketMQNameServerNode0
     Properties:
       TemplateURL: !Sub
         - 'https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}templates/rocketmq-node-broker.template.yaml'
@@ -703,7 +707,11 @@ Resources:
   SecondaryRocketMQBrokerNode0:
     Condition: CreateThreeReplicaSet
     Type: AWS::CloudFormation::Stack
-    DependsOn: RocketMQNameServerNode0
+    Metadata:
+      PseudoDependsOn: !If
+        - Launch1NameServer
+        - - !Ref RocketMQNameServerNode0
+        - ''
     Properties:
       TemplateURL: !Sub
         - 'https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}templates/rocketmq-node-broker.template.yaml'
@@ -747,7 +755,11 @@ Resources:
   SecondaryRocketMQBrokerNode1:
     Condition: CreateThreeReplicaSet
     Type: AWS::CloudFormation::Stack
-    DependsOn: RocketMQNameServerNode0
+    Metadata:
+      PseudoDependsOn: !If
+        - Launch1NameServer
+        - - !Ref RocketMQNameServerNode0
+        - ''
     Properties:
       TemplateURL: !Sub
         - 'https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}templates/rocketmq-node-broker.template.yaml'
